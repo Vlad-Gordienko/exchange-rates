@@ -1,0 +1,26 @@
+<header class="header">
+  <section class="header__uah-exchange-rate">
+    <h3 class="header__uah-exchange-rate__title">UAH exchange rate</h3>
+    <ul class="header__uah-exchange-rate__list">
+      <li>{{ 1 / exchangeRates.UAHRate.USD | currency:'USD' }}</li>
+      <li>{{ 1 / exchangeRates.UAHRate.EUR | currency:'EUR' }}</li>
+    </ul>
+  </section>
+</header>
+<main class="main">
+  <mat-card class="main__card">
+    <form>
+      <mat-form-field appearance="outline">
+        <mat-select>
+          <mat-option *ngFor="let currency of [1,2,3]" [value]="currency">
+            {{currency}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Value</mat-label>
+        <input matInput placeholder="0.00" type="number">
+      </mat-form-field>
+    </form>
+  </mat-card>
+</main>
