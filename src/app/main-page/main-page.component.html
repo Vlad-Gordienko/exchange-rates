@@ -9,18 +9,33 @@
 </header>
 <main class="main">
   <mat-card class="main__card">
-    <form>
-      <mat-form-field appearance="outline">
-        <mat-select>
-          <mat-option *ngFor="let currency of [1,2,3]" [value]="currency">
-            {{currency}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Value</mat-label>
-        <input matInput placeholder="0.00" type="number">
-      </mat-form-field>
+    <mat-card-title>Exchange Rates</mat-card-title>
+    <form [formGroup]="group" class="main__card__form">
+      <section class="main__card__form__currency-group">
+        <mat-form-field appearance="outline" class="select">
+          <mat-select formControlName="currencyLeft">
+            <mat-option *ngFor="let currency of currencyList" [value]="currency" class="option">
+              {{currency}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <input formControlName="valueLeft" matInput placeholder="0.00" type="number">
+        </mat-form-field>
+      </section>
+
+      <section class="main__card__form__currency-group">
+        <mat-form-field appearance="outline" class="select">
+          <mat-select formControlName="currencyRight">
+            <mat-option *ngFor="let currency of currencyList" [value]="currency" class="option">
+              {{currency}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <input formControlName="valueRight" matInput placeholder="0.00" type="number">
+        </mat-form-field>
+      </section>
     </form>
   </mat-card>
 </main>

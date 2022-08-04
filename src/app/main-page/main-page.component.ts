@@ -1,5 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {ExchangeRatesService} from '../services/exchange-rates.service';
+import {Currency} from "../models/currency.interface";
+import {FormControl, FormGroup} from "@angular/forms";
+import {ExchangeForm} from "../models/exchange-form.interface";
 
 @Component({
   selector: 'app-main-page',
@@ -8,18 +11,53 @@ import {ExchangeRatesService} from '../services/exchange-rates.service';
 })
 export class MainPageComponent implements OnInit {
 
+  currencyList: Currency[] = [Currency.USD, Currency.EUR, Currency.UAH];
+  group: FormGroup = new FormGroup<ExchangeForm>({
+    currencyLeft: new FormControl(Currency.UAH, {nonNullable: true}),
+    valueLeft: new FormControl(0, {nonNullable: true}),
+    currencyRight: new FormControl(Currency.USD, {nonNullable: true}),
+    valueRight: new FormControl(0, {nonNullable: true}),
+  });
+
   constructor(public exchangeRates: ExchangeRatesService) {
   }
 
   ngOnInit() {
-    setTimeout(() => {
-      console.log('UAHtoUSD', this.exchangeRates.UAHtoUSD(3.5));
-      console.log('USDtoUAH', this.exchangeRates.USDtoUAH(3.5));
-      console.log('UAHtoEUR', this.exchangeRates.UAHtoEUR(3.5));
-      console.log('EURtoUAH', this.exchangeRates.EURtoUAH(3.5));
-      console.log('USDtoEUR', this.exchangeRates.USDtoEUR(3.5));
-      console.log('EURtoUSD', this.exchangeRates.EURtoUSD(3.5));
-    }, 1000);
+    this.group.get('valueLeft')?.valueChanges.subscribe(() => {
+      this.exchangeLeftRight();
+    });
+
+    this.group.get('valueRight')?.valueChanges.subscribe(() => {
+      this.exchangeRightLeft();
+    })
+
+    this.group.get('currencyLeft')?.valueChanges.subscribe(() => {
+      this.exchangeLeftRight();
+    })
+
+    this.group.get('currencyRight')?.valueChanges.subscribe(() => {
+      this.exchangeRightLeft();
+    })
+  }
+
+  exchangeLeftRight() {
+    this.group.get('valueRight')?.setValue(
+      this.exchangeRates.exchange(
+        `${this.group.get('currencyLeft')?.value}to${this.group.get('currencyRight')?.value}`,
+        this.group.get('valueLeft')?.value
+      ),
+      { emitEvent: false }
+    );
+  }
+
+  exchangeRightLeft() {
+    this.group.get('valueLeft')?.setValue(
+      this.exchangeRates.exchange(
+        `${this.group.get('currencyRight')?.value}to${this.group.get('currencyLeft')?.value}`,
+        this.group.get('valueRight')?.value
+      ),
+      { emitEvent: false }
+    );
   }
 
 }

@@ -22,6 +22,23 @@ export class ExchangeRatesService {
     });
   }
 
+  exchange(type: string, value: number): number {
+    const exchangeTypes: {[key:string]: Function} = {
+      'UAHtoUSD': this.UAHtoUSD,
+      'USDtoUAH': this.USDtoUAH,
+      'UAHtoEUR': this.UAHtoEUR,
+      'EURtoUAH': this.EURtoUAH,
+      'USDtoEUR': this.USDtoEUR,
+      'EURtoUSD': this.EURtoUSD,
+      'UAHtoUAH': (val: number): number => val,
+      'USDtoUSD': (val: number): number => val,
+      'EURtoEUR': (val: number): number => val,
+    };
+
+    const exchangeMethod = exchangeTypes[type];
+    return exchangeMethod ? exchangeMethod.call(this, value) : NaN;
+  }
+
   UAHtoUSD(UAH: number): number {
     return UAH * this._UAHRete.USD;
   }
